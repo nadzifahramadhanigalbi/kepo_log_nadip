@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otorisasi Penulis - KepoLog</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        /* Memastikan latar belakang penuh dan form ada di tengah */
+        .login-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: #05070a;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Desain Kolom Login (Glassmorphism) */
+        .login-box {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 20px rgba(99, 102, 241, 0.2);
+            z-index: 10;
+            text-align: center;
+        }
+
+        /* Gaya untuk Input Text dan Password */
+        .form-group { text-align: left; margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            font-family: inherit;
+            transition: 0.3s;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 10px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Pesan Error jika password salah */
+        .error-msg {
+            color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            display: none; /* Disembunyikan secara default */
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-wrapper">
+        <div class="stars-container" style="animation: space-travel 60s linear infinite;"></div>
+
+        <div class="login-box">
+            <h2 style="margin-bottom: 5px;">Kepo<span style="color: #6366f1;">Log</span></h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 25px;">Otorisasi Ruang Kendali</p>
+            
+            <div id="errorMsg" class="error-msg">Akses ditolak. Email atau kata sandi salah.</div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Penulis</label>
+                    <input type="email" id="email" required placeholder="admin@kepolog.com">
+                </div>
+                <div class="form-group">
+                    <label for="password">Kata Sandi</label>
+                    <input type="password" id="password" required placeholder="••••••••">
+                </div>
+                <button type="submit" class="btn-glow" id="loginBtn" style="width: 100%; padding: 14px; margin-top: 10px; border: none; cursor: pointer;">Buka Gerbang 🚀</button>
+            </form>
+            
+            <a href="index.html" style="display: inline-block; margin-top: 25px; color: #6366f1; text-decoration: none; font-size: 0.9rem; transition: 0.3s;" onmouseover="this.style.color='#a5b4fc'" onmouseout="this.style.color='#6366f1'">
+                ← Kembali ke Halaman Utama
+            </a>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

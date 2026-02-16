@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KepoLog - Galaksi Pengetahuan</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body style="overflow: hidden;"> <header class="intro" id="hero-section">
+        <div class="stars-container" id="stars"></div>
+        
+        <div class="knowledge-elements" id="floating-elements">
+            <span class="element atom">⚛️</span>
+            <span class="element book">📖</span>
+            <span class="element planet">🪐</span>
+            <span class="element bulb">💡</span>
+        </div>
+
+        <div class="intro-content" id="hero-content">
+            <span class="tagline">Explore the Unseen</span>
+            <h1 class="main-title">Kepo<span class="gradient-text">Log</span></h1>
+            <p class="sub-title">Kelihatannya biasa. Padahal semesta kerja keras di baliknya.</p>
+            <a href="explore.html" class="btn-glow" onclick="launchWarp(event)">Luncurkan Eksplorasi 🚀</a>
+        </div>
+
+        <div id="hyperspace-flash" class="flash-overlay"></div>
+    </header>
+
+    <script>
+    function launchWarp(event) {
+        event.preventDefault();
+        const targetUrl = event.currentTarget.href;
+        
+        const stars = document.getElementById('stars');
+        const content = document.getElementById('hero-content');
+        const elements = document.getElementById('floating-elements');
+        const flash = document.getElementById('hyperspace-flash');
+
+        // 1. Roket melesat: Bintang di-zoom ekstrem dan dipercepat
+        stars.classList.add('hyper-drive');
+        
+        // 2. Konten terhempas ke belakang kencang sekali
+        content.classList.add('zoom-past');
+        elements.classList.add('zoom-past');
+
+        // 3. Kilatan cahaya (Warp Flash) sebelum pindah layar
+        setTimeout(() => {
+            flash.classList.add('flash-active');
+        }, 700); // Muncul di detik 0.7
+
+        // 4. Navigasi ke halaman baru saat layar sedang putih (transisi mulus)
+        setTimeout(() => {
+            window.location.href = targetUrl;
+        }, 1100); 
+    }
+    </script>
+</body>
+</html>
