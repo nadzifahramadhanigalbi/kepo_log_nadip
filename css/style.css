@@ -138,13 +138,58 @@ body { font-family: 'Plus Jakarta Sans', sans-serif; background: #05070a; color:
     letter-spacing: 1px;
 }
 
-/* --- NAV & BLOG AREA --- */
+/* =========================================
+   NAVBAR & HAMBURGER STYLING (BARU)
+========================================= */
+/* Navbar Light (Bawaan Lama - Untuk Index) */
 nav { background: white; padding: 20px 10%; display: flex; justify-content: space-between; align-items: center; color: #1e293b; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
 nav h1 span { color: #6366f1; }
 nav ul { display: flex; list-style: none; gap: 20px; }
 nav ul li a { text-decoration: none; color: #1e293b; font-weight: bold; transition: 0.3s; }
 nav ul li a:hover { color: #6366f1; }
 
+/* Navbar Dark (KepoLog Premium) */
+.navbar-kepolog {
+    background: rgba(15, 23, 42, 0.9) !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 15px 8% !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    flex-wrap: wrap; 
+}
+
+.nav-brand {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+}
+
+.hamburger-btn {
+    display: none; 
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8rem;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+/* --- KONTEN ARTIKEL --- */
 main { max-width: 800px; margin: 50px auto; display: flex; flex-direction: column; gap: 30px; padding: 0 20px; }
 .post { background: white; padding: 25px; border-radius: 25px; color: #1e293b; box-shadow: 0 15px 35px rgba(0,0,0,0.05); transition: 0.3s; }
 .post:hover { transform: translateY(-5px); }
@@ -159,13 +204,7 @@ main { max-width: 800px; margin: 50px auto; display: flex; flex-direction: colum
     transform: scale(2); 
 }
 
-html {
-    scroll-behavior: smooth;
-}
-
-#blog {
-    scroll-margin-top: 50px;
-}
+#blog { scroll-margin-top: 50px; }
 
 .post {
     opacity: 1; 
@@ -182,12 +221,7 @@ html {
 }
 
 /* --- TEMA ARTIKEL DARK SPACE --- */
-.post-page {
-    background: #05070a; 
-    color: #e2e8f0; 
-    display: block; 
-    min-height: 100vh;
-}
+.post-page { background: #05070a; color: #e2e8f0; display: block; min-height: 100vh; }
 
 /* --- DESAIN GLASS-NEBULA --- */
 .single-post {
@@ -201,8 +235,7 @@ html {
     border-radius: 30px;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 
-                0 0 20px rgba(99, 102, 241, 0.2); 
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 20px rgba(99, 102, 241, 0.2); 
     text-align: left;
 }
 
@@ -215,9 +248,7 @@ html {
     -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent 100%);
 }
 
-.post-content-area {
-    padding: 40px;
-}
+.post-content-area { padding: 40px; }
 
 .post-header h1 {
     font-size: 2.2rem;
@@ -237,129 +268,65 @@ html {
     padding-bottom: 15px;
 }
 
-.post-content {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #cbd5e1; 
-}
-
-.post-content strong {
-    color: #c084fc;
-    text-shadow: 0 0 10px rgba(192, 132, 252, 0.4);
-}
+.post-content { font-size: 1.1rem; line-height: 1.8; color: #cbd5e1; }
+.post-content strong { color: #c084fc; text-shadow: 0 0 10px rgba(192, 132, 252, 0.4); }
 
 .back-home .btn-glow {
-    margin-top: 20px;
-    display: inline-block;
-    padding: 12px 30px;
-    font-size: 0.9rem;
+    margin-top: 20px; display: inline-block; padding: 12px 30px; font-size: 0.9rem;
 }
+
 /* =========================================
    ANIMASI HYPERSPACE & TRANSISI HALAMAN
-   ========================================= */
-
-/* Efek Bintang Melaju Super Cepat */
+========================================= */
 .hyper-drive {
-    /* Animasi background dipercepat drastis dari 40s ke 0.5s */
     animation: space-travel 0.5s linear infinite !important; 
-    transform: scale(4); /* Zoom in ekstrem ke tengah bintang */
-    filter: blur(2px) brightness(2.5); /* Bintang jadi lebih terang dan panjang efek blur */
+    transform: scale(4); 
+    filter: blur(2px) brightness(2.5); 
     transition: transform 1.2s cubic-bezier(0.5, 0, 0.1, 1), filter 1.2s ease-in;
 }
 
-/* Efek Tulisan & Ikon Terhempas Maju (Melewati Kamera) */
 .zoom-past {
-    transform: scale(8) translateZ(100px);
-    opacity: 0;
-    transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1);
-    pointer-events: none;
+    transform: scale(8) translateZ(100px); opacity: 0; transition: all 0.8s cubic-bezier(0.7, 0, 0.3, 1); pointer-events: none;
 }
 
-/* Kilatan Cahaya Putih (Warp Flash) */
 .flash-overlay {
-    position: fixed;
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%;
-    background: white;
-    opacity: 0;
-    z-index: 9999;
-    pointer-events: none;
-    transition: opacity 0.4s ease-in;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; opacity: 0; z-index: 9999; pointer-events: none; transition: opacity 0.4s ease-in;
 }
 
-.flash-active {
-    opacity: 1;
-}
+.flash-active { opacity: 1; }
 
 /* =========================================
    GAYA HALAMAN EXPLORE (KEDATANGAN)
-   ========================================= */
-
-/* Latar Belakang Halaman Explore */
+========================================= */
 .explore-page {
-    background: #05070a; /* Tetap angkasa, tapi statis */
+    background: #05070a; 
     background-image: radial-gradient(1px 1px at 50% 50%, rgba(255,255,255,0.1), rgba(0,0,0,0));
     background-size: 100px 100px;
     color: white;
 }
 
-/* Animasi Muncul Saat Mendarat di explore.html */
 .page-enter {
     animation: arrive-from-warp 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
 }
 
 @keyframes arrive-from-warp {
-    0% { 
-        opacity: 0; 
-        transform: translateY(100px) scale(0.95); /* Datang dari bawah */
-        filter: brightness(3); /* Sisa cahaya flash dari halaman sebelumnya */
-    }
-    100% { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-        filter: brightness(1); 
-    }
+    0% { opacity: 0; transform: translateY(100px) scale(0.95); filter: brightness(3); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: brightness(1); }
 }
 
-/* Perbaikan Nav Bar di explore.html biar transparan */
-.explore-page nav {
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-.explore-page nav h1, .explore-page nav ul li a {
-    color: white;
-}
-.explore-page nav ul li a:hover {
-    color: #a5b4fc;
-}
+.explore-page nav { box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5); border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+.explore-page nav h1, .explore-page nav ul li a { color: white; }
+.explore-page nav ul li a:hover { color: #a5b4fc; }
 
 /* =========================================
    ANIMASI BACKGROUND GALAKSI 
 ========================================= */
 .galaxy-background {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    z-index: -999; /* Pastikan selalu berada di paling belakang konten */
-    background: #05070a; /* Warna dasar ruang angkasa */
-    overflow: hidden;
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -999; background: #05070a; overflow: hidden;
 }
 
-/* Layer 1: Bintang Kecil Berkedip (Twinkle) */
 .galaxy-background::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 2px;
-    height: 2px;
-    border-radius: 50%;
-    background: transparent;
-    /* Trik Box-Shadow untuk menggandakan 1 titik menjadi banyak bintang (Sumbu X, Sumbu Y, Warna) */
+    content: ""; position: absolute; top: 0; left: 0; width: 2px; height: 2px; border-radius: 50%; background: transparent;
     box-shadow: 
         10vw 10vh #fff, 20vw 20vh #a5b4fc, 30vw 5vh #fff, 40vw 60vh #fff, 
         50vw 25vh #a5b4fc, 60vw 80vh #fff, 70vw 15vh #fff, 80vw 50vh #a5b4fc, 
@@ -369,16 +336,8 @@ html {
     animation: twinkle-stars 3s infinite alternate;
 }
 
-/* Layer 2: Bintang Sedang Mengambang (Float) */
 .galaxy-background::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: transparent;
+    content: ""; position: absolute; top: 0; left: 0; width: 3px; height: 3px; border-radius: 50%; background: transparent;
     box-shadow: 
         5vw 45vh #fff, 15vw 15vh #fff, 25vw 60vh #c084fc, 35vw 80vh #fff, 
         45vw 35vh #fff, 55vw 5vh #fff, 65vw 50vh #c084fc, 75vw 25vh #fff, 
@@ -386,7 +345,6 @@ html {
     animation: float-stars 25s linear infinite;
 }
 
-/* --- KEYFRAMES (Aturan Gerak Animasi) --- */
 @keyframes twinkle-stars {
     0% { opacity: 0.3; }
     100% { opacity: 1; box-shadow: 
@@ -397,25 +355,43 @@ html {
         85vw 65vh #a5b4fc, 95vw 15vh #fff, 0 0 10px #fff; 
     }
 }
+@keyframes float-stars { from { transform: translateY(0); } to { transform: translateY(-100vh); } }
+@keyframes slideDown { from { opacity: 0; transform: translateY(-15px); } to { opacity: 1; transform: translateY(0); } }
+
 /* =========================================
    RESPONSIVE DESIGN (MOBILE & TABLET)
 ========================================= */
 @media screen and (max-width: 768px) {
-    /* 1. Navigasi Bar */
-    #blog {
+    /* 1. Navbar Hamburger Mode */
+    .navbar-kepolog {
         padding: 15px 20px !important;
-        flex-direction: column; /* Menu turun ke bawah logo */
-        gap: 15px;
-    }
-    
-    #blog ul {
-        width: 100%;
-        justify-content: center;
-        flex-wrap: wrap;
-        padding: 0;
+        flex-direction: column;
+        align-items: flex-start;
     }
 
-    /* 2. Ukuran Kartu (Mencegah nempel ke pinggir layar HP) */
+    .nav-brand {
+        width: 100%;
+    }
+
+    .hamburger-btn {
+        display: block; /* Munculkan di HP */
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        width: 100%;
+        align-items: flex-start;
+        gap: 15px;
+        margin-top: 15px;
+        display: none; /* Sembunyikan default */
+    }
+
+    .nav-menu.active {
+        display: flex;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    /* 2. Ukuran Kartu */
     .article-card {
         margin: 20px 15px;
         border-radius: 16px;
@@ -429,15 +405,15 @@ html {
 
     /* 3. Padding Dalam Artikel */
     .article-card > div {
-        padding: 25px 20px !important; /* Ruang baca lebih lega di HP */
+        padding: 25px 20px !important;
     }
 
-    /* 4. Gambar Header (Jangan terlalu tinggi di HP) */
+    /* 4. Gambar Header */
     .featured-img-container {
         height: 250px; 
     }
 
-    /* 5. Tipografi (Mengecilkan ukuran teks) */
+    /* 5. Tipografi */
     #postTitle {
         font-size: 1.8rem !important;
         line-height: 1.3;
@@ -452,9 +428,9 @@ html {
         font-size: 0.8rem !important;
     }
 
-    /* 6. Action Bar & Reaksi (Biar tombol gak tumpang tindih) */
+    /* 6. Action Bar & Reaksi */
     .action-bar {
-        flex-wrap: wrap; /* Tombol otomatis turun baris jika kepenuhan */
+        flex-wrap: wrap; 
         gap: 15px;
     }
 
@@ -472,7 +448,7 @@ html {
     }
 
     .emoji-btn {
-        font-size: 1.3rem; /* Emoji sedikit dikecilkan untuk sentuhan jari */
+        font-size: 1.3rem;
     }
 }
 
@@ -481,15 +457,10 @@ html {
 ========================================= */
 @media screen and (max-width: 480px) {
     .featured-img-container {
-        height: 200px; /* Gambar lebih pipih untuk HP kecil */
+        height: 200px; 
     }
     
     #postTitle {
         font-size: 1.5rem !important;
     }
-}
-@keyframes float-stars {
-    from { transform: translateY(0); }
-    to { transform: translateY(-100vh); }
-
 }
