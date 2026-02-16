@@ -104,29 +104,18 @@
 
     <div class="galaxy-background"></div>
         
-        <nav id="blog" style="background: rgba(15, 23, 42, 0.9); backdrop-filter: blur(10px); padding: 10px 8%;">
-            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                <h1><a href="index.html" style="text-decoration:none; color:white;">Kepo<span style="color:#6366f1;">Log</span></a></h1>
-                <ul style="display: flex; list-style: none; gap: 25px; align-items: center; margin: 0;">
-                    <li><a href="index.html" style="color: white; text-decoration: none;">Home</a></li>
-                    <li><a href="about.html" style="color: white; text-decoration: none;">Tentang</a></li>
-                    <li>
-                        <a href="login.html" style="
-                            color: white; 
-                            text-decoration: none;
-                            border: 1px solid rgba(99, 102, 241, 0.5); 
-                            padding: 6px 18px; 
-                            border-radius: 20px; 
-                            font-size: 0.9rem;
-                            background: rgba(99, 102, 241, 0.1);
-                            transition: 0.3s;
-                        " onmouseover="this.style.background='#6366f1';" onmouseout="this.style.background='rgba(99, 102, 241, 0.1)';">
-                            🔑 Login
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+        <nav id="blog" class="navbar-kepolog">
+        <div class="nav-brand">
+            <h1 style="margin: 0;"><a href="index.html" style="text-decoration:none; color:white;">Kepo<span style="color:#6366f1;">Log</span></a></h1>
+            <button id="hamburgerBtn" class="hamburger-btn">☰</button>
+        </div>
+
+        <ul id="navLinks" class="nav-menu">
+            <li><a href="index.html" style="color: white; text-decoration: none;">Home</a></li>
+            <li><a href="about.html" style="color: white; text-decoration: none;">Tentang</a></li>
+            <li><a href="login.html" style="color: white; border: 1px solid #6366f1; padding: 6px 18px; border-radius: 20px; text-decoration: none; background: rgba(99, 102, 241, 0.1);">🔑 Login</a></li>
+        </ul>
+    </nav>
 
         <main id="articleContainer">
             <div style="text-align: center; padding: 100px 20px; color: #94a3b8; grid-column: 1 / -1;">
@@ -147,4 +136,5 @@
 
     <script src="js/explore.js"></script>
 </body>
+
 </html>
