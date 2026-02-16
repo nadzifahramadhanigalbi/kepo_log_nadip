@@ -397,8 +397,99 @@ html {
         85vw 65vh #a5b4fc, 95vw 15vh #fff, 0 0 10px #fff; 
     }
 }
+/* =========================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+========================================= */
+@media screen and (max-width: 768px) {
+    /* 1. Navigasi Bar */
+    #blog {
+        padding: 15px 20px !important;
+        flex-direction: column; /* Menu turun ke bawah logo */
+        gap: 15px;
+    }
+    
+    #blog ul {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        padding: 0;
+    }
 
+    /* 2. Ukuran Kartu (Mencegah nempel ke pinggir layar HP) */
+    .article-card {
+        margin: 20px 15px;
+        border-radius: 16px;
+    }
+    
+    .interaction-card {
+        margin: 20px 15px 60px;
+        padding: 20px !important;
+        border-radius: 16px;
+    }
+
+    /* 3. Padding Dalam Artikel */
+    .article-card > div {
+        padding: 25px 20px !important; /* Ruang baca lebih lega di HP */
+    }
+
+    /* 4. Gambar Header (Jangan terlalu tinggi di HP) */
+    .featured-img-container {
+        height: 250px; 
+    }
+
+    /* 5. Tipografi (Mengecilkan ukuran teks) */
+    #postTitle {
+        font-size: 1.8rem !important;
+        line-height: 1.3;
+    }
+
+    #postBody {
+        font-size: 1rem !important;
+        line-height: 1.6;
+    }
+
+    .post-meta {
+        font-size: 0.8rem !important;
+    }
+
+    /* 6. Action Bar & Reaksi (Biar tombol gak tumpang tindih) */
+    .action-bar {
+        flex-wrap: wrap; /* Tombol otomatis turun baris jika kepenuhan */
+        gap: 15px;
+    }
+
+    .action-btn {
+        font-size: 0.85rem;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 8px 12px;
+        border-radius: 20px;
+    }
+
+    .reaction-popup {
+        bottom: 120%;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .emoji-btn {
+        font-size: 1.3rem; /* Emoji sedikit dikecilkan untuk sentuhan jari */
+    }
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (HP UKURAN KECIL)
+========================================= */
+@media screen and (max-width: 480px) {
+    .featured-img-container {
+        height: 200px; /* Gambar lebih pipih untuk HP kecil */
+    }
+    
+    #postTitle {
+        font-size: 1.5rem !important;
+    }
+}
 @keyframes float-stars {
     from { transform: translateY(0); }
     to { transform: translateY(-100vh); }
+
 }
