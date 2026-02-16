@@ -7,32 +7,157 @@
     <link rel="stylesheet" href="css/style.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        .dashboard-container { display: grid; grid-template-columns: 250px 1fr; min-height: 100vh; background: #05070a; color: white; }
-        .sidebar { background: rgba(15, 23, 42, 0.8); border-right: 1px solid rgba(255, 255, 255, 0.1); padding: 30px 20px; display: flex; flex-direction: column; }
-        .main-content { padding: 40px; overflow-y: auto; width: 100%; }
-        .glass-panel { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; padding: 30px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        /* --- LAYOUT UTAMA --- */
+        .dashboard-container { 
+            display: grid; 
+            grid-template-columns: 250px 1fr; 
+            min-height: 100vh; 
+            background: #05070a; 
+            color: white; 
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar { 
+            background: rgba(15, 23, 42, 0.95); 
+            border-right: 1px solid rgba(255, 255, 255, 0.1); 
+            padding: 30px 20px; 
+            display: flex; 
+            flex-direction: column; 
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+        }
+
+        /* --- KONTEN UTAMA --- */
+        .main-content { 
+            padding: 40px; 
+            overflow-y: auto; 
+            width: 100%; 
+            height: 100vh;
+        }
+
+        /* --- ELEMEN UI --- */
+        .glass-panel { 
+            background: rgba(15, 23, 42, 0.6); 
+            backdrop-filter: blur(12px); 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 20px; 
+            padding: 30px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            overflow-x: auto; /* Agar tabel bisa di-scroll horizontal jika kepanjangan */
+        }
+        
         .form-group { margin-bottom: 20px; }
         .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(0, 0, 0, 0.3); color: white; font-family: inherit; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid rgba(255, 255, 255, 0.2); 
+            background: rgba(0, 0, 0, 0.3); color: white; font-family: inherit; 
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            outline: none; border-color: #6366f1; background: rgba(99, 102, 241, 0.05);
+        }
+
+        /* --- TABEL --- */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; min-width: 600px; }
         th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
         th { color: #6366f1; border-bottom: 2px solid rgba(99, 102, 241, 0.3); }
         .badge { background: #6366f1; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; }
         .status-pill { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: bold; }
+
+        /* --- TOMBOL HAMBURGER (Sembunyi di Desktop) --- */
+        .mobile-header {
+            display: none;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
+        }
+
+        .dash-hamburger {
+            background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; transition: 0.3s;
+        }
+
+        /* Tombol Silang (Close) di dalam Sidebar Mobile */
+        .close-sidebar-btn {
+            display: none;
+            background: none; border: none; color: #ef4444; font-size: 2rem; 
+            cursor: pointer; position: absolute; top: 20px; right: 20px;
+        }
+
+        /* Overlay Gelap saat Sidebar Terbuka di HP */
+        .sidebar-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0,0,0,0.6); backdrop-filter: blur(3px); z-index: 999;
+        }
+
+        /* =========================================
+           RESPONSIVE DASHBOARD (MOBILE & TABLET)
+        ========================================= */
+        @media screen and (max-width: 850px) {
+            .dashboard-container { 
+                grid-template-columns: 1fr; /* Sidebar hilang, konten ambil 100% */
+            }
+
+            .mobile-header {
+                display: flex; /* Munculkan Header Mobile */
+            }
+
+            .main-content {
+                padding: 20px;
+                height: auto;
+            }
+
+            .glass-panel {
+                padding: 20px;
+            }
+
+            /* --- SIDEBAR MENJADI MENU SLIDE DARI KIRI --- */
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -300px; /* Sembunyikan di luar layar sebelah kiri */
+                width: 280px;
+                height: 100vh;
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            }
+
+            .sidebar.active {
+                left: 0; /* Geser masuk ke layar saat aktif */
+            }
+
+            .close-sidebar-btn {
+                display: block; /* Munculkan tombol close di HP */
+            }
+        }
     </style>
 </head>
 <body>
 
+    <header class="mobile-header">
+        <h2 style="margin: 0;">Kepo<span style="color: #6366f1;">Log</span></h2>
+        <button id="dashHamburger" class="dash-hamburger">☰</button>
+    </header>
+
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <h2>Kepo<span style="color: #6366f1;">Log</span></h2>
-            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 30px;">Mission Control</p>
-            <ul style="list-style: none; padding: 0; gap: 20px; display: flex; flex-direction: column;">
-                <li><a href="#addPostForm" style="color: white; text-decoration: none; font-weight: bold;">📝 Tulis Artikel</a></li>
-                <li><a href="#messagesTable" style="color: white; text-decoration: none; font-weight: bold;">💬 Cek Pesan</a></li>
-                <li><a href="index.html" style="color: #94a3b8; text-decoration: none;">🚀 Ke Beranda Publik</a></li>
-                <li style="margin-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
-                    <button id="logoutBtn" style="background: transparent; border: none; color: #ef4444; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1rem;">🚪 Keluar (Logout)</button>
+        <aside id="adminSidebar" class="sidebar">
+            <button id="closeSidebar" class="close-sidebar-btn">✖</button>
+            <h2 style="margin-top: 10px;">Kepo<span style="color: #6366f1;">Log</span></h2>
+            <p style="color: #94a3b8; font-size: 0.9rem; margin-bottom: 40px;">Mission Control</p>
+            
+            <ul style="list-style: none; padding: 0; gap: 25px; display: flex; flex-direction: column;">
+                <li><a href="#addPostForm" class="nav-item" style="color: white; text-decoration: none; font-weight: bold; font-size: 1.1rem;">📝 Tulis Artikel</a></li>
+                <li><a href="#messagesTable" class="nav-item" style="color: white; text-decoration: none; font-weight: bold; font-size: 1.1rem;">💬 Cek Pesan</a></li>
+                <li style="margin-top: 20px;"><a href="index.html" style="color: #a5b4fc; text-decoration: none;">🚀 Ke Beranda Publik</a></li>
+                
+                <li style="margin-top: auto; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1);">
+                    <button id="logoutBtn" style="background: transparent; border: none; color: #ef4444; font-weight: bold; cursor: pointer; font-family: inherit; font-size: 1.1rem; padding: 0;">🚪 Keluar (Logout)</button>
                 </li>
             </ul>
         </aside>
@@ -56,29 +181,66 @@
                         </select>
                     </div>
                     <div class="form-group"><label>URL Gambar Cover</label><input type="url" id="imageUrl" required placeholder="https://example.com/image.jpg"></div>
-                    <div class="form-group"><label>Isi Artikel</label><textarea id="content" rows="6" required></textarea></div>
-                    <button type="submit" class="btn-glow" id="submitBtn" style="border:none; cursor:pointer;">Luncurkan Artikel 🚀</button>
+                    <div class="form-group"><label>Isi Artikel</label><textarea id="content" rows="6" required placeholder="Tulis penemuanmu di sini..."></textarea></div>
+                    <button type="submit" class="btn-glow" id="submitBtn" style="border:none; cursor:pointer; width: 100%;">Luncurkan Artikel 🚀</button>
                 </form>
             </div>
 
             <div class="glass-panel">
                 <h3 style="margin-bottom: 20px; color: #a5b4fc;">Arsip Eksplorasi</h3>
-                <table id="postsTable">
-                    <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Aksi</th></tr></thead>
-                    <tbody id="postsBody"><tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr></tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table id="postsTable">
+                        <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Aksi</th></tr></thead>
+                        <tbody id="postsBody"><tr><td colspan="4" style="text-align:center;">Memuat data...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
 
             <div class="glass-panel" style="border-color: rgba(168, 85, 247, 0.4);">
                 <h3 style="margin-bottom: 20px; color: #c084fc;">💬 Sinyal Masuk (DM)</h3>
-                <table id="messagesTable">
-                    <thead><tr><th>Pengirim</th><th>Kontak</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead>
-                    <tbody id="messagesBody"><tr><td colspan="5" style="text-align:center;">Memindai sinyal...</td></tr></tbody>
-                </table>
+                <div style="overflow-x: auto;">
+                    <table id="messagesTable">
+                        <thead><tr><th>Pengirim</th><th>Kontak</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead>
+                        <tbody id="messagesBody"><tr><td colspan="5" style="text-align:center;">Memindai sinyal...</td></tr></tbody>
+                    </table>
+                </div>
             </div>
         </main>
     </div>
 
     <script src="js/dashboard.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dashHamburger = document.getElementById('dashHamburger');
+            const adminSidebar = document.getElementById('adminSidebar');
+            const closeSidebar = document.getElementById('closeSidebar');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // Fungsi untuk membuka menu
+            function openMenu() {
+                adminSidebar.classList.add('active');
+                sidebarOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden'; // Kunci scroll layar utama
+            }
+
+            // Fungsi untuk menutup menu
+            function closeMenu() {
+                adminSidebar.classList.remove('active');
+                sidebarOverlay.style.display = 'none';
+                document.body.style.overflow = 'auto'; // Buka kunci scroll
+            }
+
+            if (dashHamburger) dashHamburger.addEventListener('click', openMenu);
+            if (closeSidebar) closeSidebar.addEventListener('click', closeMenu);
+            if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeMenu);
+
+            // Tutup sidebar otomatis jika salah satu menu ditekan
+            navItems.forEach(item => {
+                item.addEventListener('click', closeMenu);
+            });
+        });
+    </script>
 </body>
 </html>
