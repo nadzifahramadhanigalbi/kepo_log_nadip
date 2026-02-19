@@ -4,239 +4,348 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ruang Kendali - KepoLog</title>
-    <link rel="stylesheet" href="css/style.css">
+    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap" rel="stylesheet">
+
     <style>
-        /* --- RESET KHUSUS DASHBOARD (PENTING!) --- */
-        /* Memastikan dashboard tidak terpengaruh style global body/header lain */
+        /* =========================================
+           RESET KHUSUS DASHBOARD (ISOLASI TOTAL)
+        ========================================= */
+        :root {
+            --bg-dark: #05070a;
+            --sidebar-bg: #0f172a;
+            --panel-bg: rgba(30, 41, 59, 0.7);
+            --accent: #6366f1;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
-            margin: 0;
-            padding: 0;
-            background: #05070a;
-            color: white;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
             font-family: 'Plus Jakarta Sans', sans-serif;
             overflow-x: hidden; /* Mencegah scroll samping */
         }
 
-        /* --- LAYOUT GRID UTAMA --- */
-        .dashboard-container { 
-            display: grid; 
-            grid-template-columns: 260px 1fr; /* Sidebar kiri tetap 260px */
-            min-height: 100vh; 
+        /* =========================================
+           LAYOUT UTAMA (SIDEBAR FIXED + KONTEN)
+        ========================================= */
+        .dashboard-wrapper {
+            display: flex;
+            min-height: 100vh;
             width: 100%;
         }
 
-        /* --- SIDEBAR DESKTOP --- */
-        .sidebar { 
-            background: #0f172a; /* Warna solid agar tidak transparan aneh */
-            border-right: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 30px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            position: fixed; /* Kunci sidebar agar tidak ikut scroll */
+        /* --- SIDEBAR --- */
+        .admin-sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border);
+            position: fixed;
             top: 0;
             left: 0;
-            width: 260px;
             height: 100vh;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
             z-index: 1000;
             transition: transform 0.3s ease;
         }
 
+        /* --- MENU UTAMA (JANGAN PAKAI TAG NAV BIAR GAK TABRAKAN) --- */
+        .sidebar-menu {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .menu-link:hover, .menu-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--accent);
+        }
+
+        .menu-icon { font-size: 1.2rem; }
+
         /* --- KONTEN UTAMA --- */
-        .main-content { 
-            margin-left: 260px; /* Memberi ruang untuk sidebar yang di-fixed */
-            padding: 40px; 
+        .admin-content {
+            margin-left: 260px; /* Memberi tempat untuk sidebar */
+            flex: 1;
+            padding: 40px;
             width: calc(100% - 260px);
-            min-height: 100vh;
         }
 
-        /* --- ELEMEN UI --- */
-        .glass-panel { 
-            background: rgba(30, 41, 59, 0.7); /* Lebih gelap agar kontras */
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 16px; 
-            padding: 30px; 
-            margin-bottom: 30px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        /* --- ELEMEN DASHBOARD --- */
+        .dash-header {
+            margin-bottom: 40px;
         }
 
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
-        .form-group input, .form-group textarea, .form-group select { 
-            width: 100%; padding: 12px; border-radius: 8px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            background: #1e293b; color: white; font-family: inherit;
+        .dash-card {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            padding: 12px 15px;
+            background: #1e293b;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: white;
+            font-family: inherit;
+            margin-bottom: 20px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+        }
+
+        /* --- TABEL --- */
+        .table-responsive {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            min-width: 600px; /* Agar tabel tidak hancur di layar kecil */
+        }
+
+        th {
+            text-align: left;
+            color: var(--accent);
+            padding: 15px;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.2);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .btn-danger-ghost {
+            background: transparent;
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
         }
         
-        /* --- TABEL --- */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { color: #818cf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { color: #cbd5e1; font-size: 0.95rem; }
+        .btn-danger-ghost:hover {
+            background: rgba(239, 68, 68, 0.1);
+        }
 
-        /* --- HEADER MOBILE (Hanya Muncul di HP) --- */
-        .mobile-header {
-            display: none; /* Default sembunyi di Desktop */
-            justify-content: space-between;
-            align-items: center;
-            background: #0f172a;
+        /* --- MOBILE HEADER & OVERLAY --- */
+        .mobile-topbar {
+            display: none;
+            background: var(--sidebar-bg);
             padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 2000;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .dash-hamburger {
-            background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;
+        .hamburger-toggle {
+            background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer;
         }
 
-        /* Tombol Close Sidebar Mobile */
-        .close-sidebar-btn { display: none; }
-
-        /* Overlay Gelap */
         .sidebar-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1500;
+            background: rgba(0,0,0,0.5); z-index: 900; backdrop-filter: blur(2px);
+        }
+
+        .close-sidebar {
+            position: absolute; top: 20px; right: 20px;
+            background: none; border: none; color: #ef4444; font-size: 1.5rem; cursor: pointer;
+            display: none;
         }
 
         /* =========================================
-           RESPONSIVE (HP & TABLET)
+           RESPONSIVE MOBILE (< 850px)
         ========================================= */
-        @media screen and (max-width: 850px) {
-            .dashboard-container { 
-                display: block; /* Matikan Grid di HP */
+        @media (max-width: 850px) {
+            .mobile-topbar { display: flex; }
+            
+            .admin-sidebar {
+                transform: translateX(-100%); /* Sembunyi ke kiri */
+                box-shadow: 10px 0 30px rgba(0,0,0,0.5);
             }
 
-            .main-content {
-                margin-left: 0; /* Hapus margin kiri */
+            .admin-sidebar.active {
+                transform: translateX(0); /* Muncul */
+            }
+
+            .admin-content {
+                margin-left: 0;
                 width: 100%;
                 padding: 20px;
             }
 
-            .mobile-header {
-                display: flex; /* Munculkan Header Mobile */
-            }
-
-            /* Sidebar Sembunyi ke Kiri */
-            .sidebar {
-                transform: translateX(-100%); /* Geser keluar layar */
-                z-index: 3000; /* Paling atas */
-                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            }
-
-            /* Class Aktif untuk Memunculkan Sidebar */
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .close-sidebar-btn {
-                display: block;
-                position: absolute; top: 20px; right: 20px;
-                background: none; border: none; color: #ef4444; font-size: 1.5rem; cursor: pointer;
-            }
+            .close-sidebar { display: block; }
         }
     </style>
 </head>
 <body>
 
-    <header class="mobile-header">
-        <h3 style="margin: 0; font-size: 1.2rem;">Kepo<span style="color: #6366f1;">Log</span> Panel</h3>
-        <button id="dashHamburger" class="dash-hamburger">☰</button>
+    <header class="mobile-topbar">
+        <h3 style="margin:0;">Kepo<span style="color:var(--accent);">Log</span> Panel</h3>
+        <button id="toggleSidebar" class="hamburger-toggle">☰</button>
     </header>
 
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+    <div id="overlay" class="sidebar-overlay"></div>
 
-    <div class="dashboard-container">
-        
-        <aside id="adminSidebar" class="sidebar">
-            <button id="closeSidebar" class="close-sidebar-btn">✖</button>
+    <div class="dashboard-wrapper">
+        <aside id="sidebar" class="admin-sidebar">
+            <button id="closeSidebarBtn" class="close-sidebar">✖</button>
             
-            <div style="margin-bottom: 40px;">
-                <h2 style="margin: 0;">Kepo<span style="color: #6366f1;">Log</span></h2>
-                <p style="color: #64748b; font-size: 0.85rem; margin-top: 5px;">Mission Control</p>
+            <div style="padding-left: 15px;">
+                <h2 style="margin:0; font-size: 1.5rem;">Kepo<span style="color:var(--accent);">Log</span></h2>
+                <p style="color:var(--text-muted); font-size: 0.8rem; margin-top:5px;">Mission Control</p>
             </div>
-            
-            <nav>
-                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px;">
-                    <li>
-                        <a href="#addPostForm" class="nav-item" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; transition: 0.2s;">
-                            <span>📝</span> Tulis Artikel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#messagesTable" class="nav-item" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; transition: 0.2s;">
-                            <span>💬</span> Cek Pesan
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.html" style="color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; margin-top: 20px;">
-                            <span>🚀</span> Ke Beranda Publik
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+
+            <div class="sidebar-menu">
+                <a href="#addPostForm" class="menu-link active">
+                    <span class="menu-icon">📝</span> Tulis Artikel
+                </a>
+                <a href="#messagesTable" class="menu-link">
+                    <span class="menu-icon">💬</span> Cek Pesan
+                </a>
+                <a href="index.html" class="menu-link" style="margin-top: 20px; color: #a5b4fc;">
+                    <span class="menu-icon">🚀</span> Ke Beranda Publik
+                </a>
+            </div>
 
             <div style="margin-top: auto;">
-                <button id="logoutBtn" style="width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;">
+                <button id="logoutBtn" style="width: 100%; padding: 12px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid #ef4444; border-radius: 8px; cursor: pointer; font-weight: bold; transition:0.3s;">
                     🚪 Keluar
                 </button>
             </div>
         </aside>
 
-        <main class="main-content">
-            <header style="margin-bottom: 40px;">
-                <h1 style="font-size: 1.8rem; margin-bottom: 5px;">Dashboard Penulis</h1>
-                <p style="color: #94a3b8;">Selamat datang kembali di pusat kendali.</p>
-            </header>
+        <main class="admin-content">
+            <div class="dash-header">
+                <h1>Dashboard Penulis</h1>
+                <p style="color:var(--text-muted);">Selamat datang kembali, Komandan.</p>
+            </div>
 
-            <div class="glass-panel">
-                <h3 style="margin-bottom: 20px; color: #a5b4fc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Tulis Kepo Baru</h3>
+            <div class="dash-card">
+                <h3 style="margin-bottom: 20px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 10px;">
+                    ✍️ Tulis Kepo Baru
+                </h3>
                 <form id="addPostForm">
-                    <div class="form-group">
-                        <label>Judul Artikel</label>
-                        <input type="text" id="title" required placeholder="Cth: Kenapa kucing takut timun?">
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori</label>
-                        <select id="category" required>
-                            <option value="Sains Sepele">Sains Sepele</option>
-                            <option value="Daily Life">Daily Life</option>
-                            <option value="Misteri">Misteri</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>URL Gambar Cover</label>
-                        <input type="url" id="imageUrl" required placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Isi Artikel</label>
-                        <textarea id="content" rows="8" required placeholder="Mulailah mengetik teorimu..."></textarea>
-                    </div>
-                    <button type="submit" class="btn-glow" id="submitBtn" style="border:none; cursor:pointer; width: 100%; padding: 15px; background: #6366f1; color: white; font-weight: bold; border-radius: 8px;">
-                        Luncurkan Artikel 🚀
-                    </button>
+                    <label class="form-label">Judul Artikel</label>
+                    <input type="text" id="title" class="form-input" required placeholder="Contoh: Kenapa kucing takut timun?">
+
+                    <label class="form-label">Kategori</label>
+                    <select id="category" class="form-select" required>
+                        <option value="Sains Sepele">Sains Sepele</option>
+                        <option value="Daily Life">Daily Life</option>
+                        <option value="Misteri">Misteri</option>
+                    </select>
+
+                    <label class="form-label">URL Gambar Sampul</label>
+                    <input type="url" id="imageUrl" class="form-input" required placeholder="https://...">
+
+                    <label class="form-label">Isi Artikel</label>
+                    <textarea id="content" class="form-textarea" rows="8" required placeholder="Tulis penemuan barumu di sini..."></textarea>
+
+                    <button type="submit" id="submitBtn" class="btn-primary">Luncurkan Artikel 🚀</button>
                 </form>
             </div>
 
-            <div class="glass-panel">
-                <h3 style="margin-bottom: 20px; color: #a5b4fc;">Arsip Eksplorasi</h3>
-                <div style="overflow-x: auto;">
+            <div class="dash-card">
+                <h3 style="margin-bottom: 20px; color: var(--accent);">📚 Arsip Eksplorasi</h3>
+                <div class="table-responsive">
                     <table id="postsTable">
-                        <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Aksi</th></tr></thead>
-                        <tbody id="postsBody"><tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr></tbody>
+                        <thead>
+                            <tr>
+                                <th>Judul</th>
+                                <th>Kategori</th>
+                                <th>Tanggal</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="postsBody">
+                            <tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="glass-panel" style="border-color: rgba(168, 85, 247, 0.4);">
-                <h3 style="margin-bottom: 20px; color: #c084fc;">💬 Sinyal Masuk (DM)</h3>
-                <div style="overflow-x: auto;">
+            <div class="dash-card" style="border-color: rgba(168, 85, 247, 0.3);">
+                <h3 style="margin-bottom: 20px; color: #c084fc;">💬 Sinyal Masuk</h3>
+                <div class="table-responsive">
                     <table id="messagesTable">
-                        <thead><tr><th>Pengirim</th><th>Kontak</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="messagesBody"><tr><td colspan="5" style="text-align:center; padding: 20px;">Memindai sinyal...</td></tr></tbody>
+                        <thead>
+                            <tr>
+                                <th>Pengirim</th>
+                                <th>Kontak</th>
+                                <th>Pesan</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messagesBody">
+                            <tr><td colspan="5" style="text-align:center; padding: 20px;">Memindai sinyal...</td></tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -246,309 +355,31 @@
     <script src="js/dashboard.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dashHamburger = document.getElementById('dashHamburger');
-            const adminSidebar = document.getElementById('adminSidebar');
-            const closeSidebar = document.getElementById('closeSidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const navItems = document.querySelectorAll('.nav-item');
+        const toggleBtn = document.getElementById('toggleSidebar');
+        const closeBtn = document.getElementById('closeSidebarBtn');
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const menuLinks = document.querySelectorAll('.menu-link');
 
-            function openMenu() {
-                adminSidebar.classList.add('active');
-                sidebarOverlay.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeMenu() {
-                adminSidebar.classList.remove('active');
-                sidebarOverlay.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-
-            if(dashHamburger) dashHamburger.addEventListener('click', openMenu);
-            if(closeSidebar) closeSidebar.addEventListener('click', closeMenu);
-            if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeMenu);
-
-            navItems.forEach(item => {
-                item.addEventListener('click', closeMenu);
-            });
-        });
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ruang Kendali - KepoLog</title>
-    <link rel="stylesheet" href="css/style.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
-    <style>
-        /* --- RESET KHUSUS DASHBOARD (PENTING!) --- */
-        /* Memastikan dashboard tidak terpengaruh style global body/header lain */
-        body {
-            margin: 0;
-            padding: 0;
-            background: #05070a;
-            color: white;
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            overflow-x: hidden; /* Mencegah scroll samping */
+        function openMenu() {
+            sidebar.classList.add('active');
+            overlay.style.display = 'block';
+            document.body.style.overflow = 'hidden';
         }
 
-        /* --- LAYOUT GRID UTAMA --- */
-        .dashboard-container { 
-            display: grid; 
-            grid-template-columns: 260px 1fr; /* Sidebar kiri tetap 260px */
-            min-height: 100vh; 
-            width: 100%;
+        function closeMenu() {
+            sidebar.classList.remove('active');
+            overlay.style.display = 'none';
+            document.body.style.overflow = 'auto';
         }
 
-        /* --- SIDEBAR DESKTOP --- */
-        .sidebar { 
-            background: #0f172a; /* Warna solid agar tidak transparan aneh */
-            border-right: 1px solid rgba(255, 255, 255, 0.1); 
-            padding: 30px 20px; 
-            display: flex; 
-            flex-direction: column; 
-            position: fixed; /* Kunci sidebar agar tidak ikut scroll */
-            top: 0;
-            left: 0;
-            width: 260px;
-            height: 100vh;
-            z-index: 1000;
-            transition: transform 0.3s ease;
-        }
-
-        /* --- KONTEN UTAMA --- */
-        .main-content { 
-            margin-left: 260px; /* Memberi ruang untuk sidebar yang di-fixed */
-            padding: 40px; 
-            width: calc(100% - 260px);
-            min-height: 100vh;
-        }
-
-        /* --- ELEMEN UI --- */
-        .glass-panel { 
-            background: rgba(30, 41, 59, 0.7); /* Lebih gelap agar kontras */
-            backdrop-filter: blur(10px); 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 16px; 
-            padding: 30px; 
-            margin-bottom: 30px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; margin-bottom: 8px; color: #94a3b8; font-size: 0.9rem; }
-        .form-group input, .form-group textarea, .form-group select { 
-            width: 100%; padding: 12px; border-radius: 8px; 
-            border: 1px solid rgba(255, 255, 255, 0.2); 
-            background: #1e293b; color: white; font-family: inherit;
-        }
+        if(toggleBtn) toggleBtn.addEventListener('click', openMenu);
+        if(closeBtn) closeBtn.addEventListener('click', closeMenu);
+        if(overlay) overlay.addEventListener('click', closeMenu);
         
-        /* --- TABEL --- */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        th { color: #818cf8; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
-        td { color: #cbd5e1; font-size: 0.95rem; }
-
-        /* --- HEADER MOBILE (Hanya Muncul di HP) --- */
-        .mobile-header {
-            display: none; /* Default sembunyi di Desktop */
-            justify-content: space-between;
-            align-items: center;
-            background: #0f172a;
-            padding: 15px 20px;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 2000;
-        }
-
-        .dash-hamburger {
-            background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer;
-        }
-
-        /* Tombol Close Sidebar Mobile */
-        .close-sidebar-btn { display: none; }
-
-        /* Overlay Gelap */
-        .sidebar-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 1500;
-        }
-
-        /* =========================================
-           RESPONSIVE (HP & TABLET)
-        ========================================= */
-        @media screen and (max-width: 850px) {
-            .dashboard-container { 
-                display: block; /* Matikan Grid di HP */
-            }
-
-            .main-content {
-                margin-left: 0; /* Hapus margin kiri */
-                width: 100%;
-                padding: 20px;
-            }
-
-            .mobile-header {
-                display: flex; /* Munculkan Header Mobile */
-            }
-
-            /* Sidebar Sembunyi ke Kiri */
-            .sidebar {
-                transform: translateX(-100%); /* Geser keluar layar */
-                z-index: 3000; /* Paling atas */
-                box-shadow: 5px 0 15px rgba(0,0,0,0.5);
-            }
-
-            /* Class Aktif untuk Memunculkan Sidebar */
-            .sidebar.active {
-                transform: translateX(0);
-            }
-
-            .close-sidebar-btn {
-                display: block;
-                position: absolute; top: 20px; right: 20px;
-                background: none; border: none; color: #ef4444; font-size: 1.5rem; cursor: pointer;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <header class="mobile-header">
-        <h3 style="margin: 0; font-size: 1.2rem;">Kepo<span style="color: #6366f1;">Log</span> Panel</h3>
-        <button id="dashHamburger" class="dash-hamburger">☰</button>
-    </header>
-
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-    <div class="dashboard-container">
-        
-        <aside id="adminSidebar" class="sidebar">
-            <button id="closeSidebar" class="close-sidebar-btn">✖</button>
-            
-            <div style="margin-bottom: 40px;">
-                <h2 style="margin: 0;">Kepo<span style="color: #6366f1;">Log</span></h2>
-                <p style="color: #64748b; font-size: 0.85rem; margin-top: 5px;">Mission Control</p>
-            </div>
-            
-            <nav>
-                <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 15px;">
-                    <li>
-                        <a href="#addPostForm" class="nav-item" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; transition: 0.2s;">
-                            <span>📝</span> Tulis Artikel
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#messagesTable" class="nav-item" style="color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; transition: 0.2s;">
-                            <span>💬</span> Cek Pesan
-                        </a>
-                    </li>
-                    <li>
-                        <a href="index.html" style="color: #94a3b8; text-decoration: none; display: flex; align-items: center; gap: 10px; padding: 10px; margin-top: 20px;">
-                            <span>🚀</span> Ke Beranda Publik
-                        </a>
-                    </li>
-                </ul>
-            </nav>
-
-            <div style="margin-top: auto;">
-                <button id="logoutBtn" style="width: 100%; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; color: #ef4444; padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.2s;">
-                    🚪 Keluar
-                </button>
-            </div>
-        </aside>
-
-        <main class="main-content">
-            <header style="margin-bottom: 40px;">
-                <h1 style="font-size: 1.8rem; margin-bottom: 5px;">Dashboard Penulis</h1>
-                <p style="color: #94a3b8;">Selamat datang kembali di pusat kendali.</p>
-            </header>
-
-            <div class="glass-panel">
-                <h3 style="margin-bottom: 20px; color: #a5b4fc; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px;">Tulis Kepo Baru</h3>
-                <form id="addPostForm">
-                    <div class="form-group">
-                        <label>Judul Artikel</label>
-                        <input type="text" id="title" required placeholder="Cth: Kenapa kucing takut timun?">
-                    </div>
-                    <div class="form-group">
-                        <label>Kategori</label>
-                        <select id="category" required>
-                            <option value="Sains Sepele">Sains Sepele</option>
-                            <option value="Daily Life">Daily Life</option>
-                            <option value="Misteri">Misteri</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>URL Gambar Cover</label>
-                        <input type="url" id="imageUrl" required placeholder="https://...">
-                    </div>
-                    <div class="form-group">
-                        <label>Isi Artikel</label>
-                        <textarea id="content" rows="8" required placeholder="Mulailah mengetik teorimu..."></textarea>
-                    </div>
-                    <button type="submit" class="btn-glow" id="submitBtn" style="border:none; cursor:pointer; width: 100%; padding: 15px; background: #6366f1; color: white; font-weight: bold; border-radius: 8px;">
-                        Luncurkan Artikel 🚀
-                    </button>
-                </form>
-            </div>
-
-            <div class="glass-panel">
-                <h3 style="margin-bottom: 20px; color: #a5b4fc;">Arsip Eksplorasi</h3>
-                <div style="overflow-x: auto;">
-                    <table id="postsTable">
-                        <thead><tr><th>Judul</th><th>Kategori</th><th>Tanggal</th><th>Aksi</th></tr></thead>
-                        <tbody id="postsBody"><tr><td colspan="4" style="text-align:center; padding: 20px;">Memuat data...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <div class="glass-panel" style="border-color: rgba(168, 85, 247, 0.4);">
-                <h3 style="margin-bottom: 20px; color: #c084fc;">💬 Sinyal Masuk (DM)</h3>
-                <div style="overflow-x: auto;">
-                    <table id="messagesTable">
-                        <thead><tr><th>Pengirim</th><th>Kontak</th><th>Pesan</th><th>Status</th><th>Aksi</th></tr></thead>
-                        <tbody id="messagesBody"><tr><td colspan="5" style="text-align:center; padding: 20px;">Memindai sinyal...</td></tr></tbody>
-                    </table>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <script src="js/dashboard.js"></script>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dashHamburger = document.getElementById('dashHamburger');
-            const adminSidebar = document.getElementById('adminSidebar');
-            const closeSidebar = document.getElementById('closeSidebar');
-            const sidebarOverlay = document.getElementById('sidebarOverlay');
-            const navItems = document.querySelectorAll('.nav-item');
-
-            function openMenu() {
-                adminSidebar.classList.add('active');
-                sidebarOverlay.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-            }
-
-            function closeMenu() {
-                adminSidebar.classList.remove('active');
-                sidebarOverlay.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }
-
-            if(dashHamburger) dashHamburger.addEventListener('click', openMenu);
-            if(closeSidebar) closeSidebar.addEventListener('click', closeMenu);
-            if(sidebarOverlay) sidebarOverlay.addEventListener('click', closeMenu);
-
-            navItems.forEach(item => {
-                item.addEventListener('click', closeMenu);
-            });
+        // Tutup sidebar kalau klik menu (biar enak di HP)
+        menuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
         });
     </script>
 </body>
